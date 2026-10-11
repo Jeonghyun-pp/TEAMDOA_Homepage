@@ -1,0 +1,494 @@
+@import "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css";
+@import "https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap";
+@import "tailwindcss";
+
+/*
+ * ─────────────────────────────────────────────────────────────
+ *  DESIGN LAYER: 소개서(insta-toon-project pipeline/09_deck/base.css)와 같은 토큰
+ *  컴포넌트(TSX)는 색 값을 직접 쓰지 않고 아래 토큰만 참조한다.
+ *  화면 원칙: 섹션마다 큰 것 하나 + 진행자 캐릭터와 짧은 말풍선, 보조 숫자는 아래 띠, 출처는 맨 아래.
+ * ─────────────────────────────────────────────────────────────
+ */
+
+@theme inline {
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --breakpoint-xs: 30rem;
+}
+
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+:root {
+  /* ── 바탕 ── */
+  --paper: #fbf8f3;
+  --paper-2: #f3eee6;
+  --surface: #ffffff;
+  --memo: #fffdf6;
+  --line: #e6dfd5;
+  --line-strong: #cfc6ba;
+
+  /* ── 잉크 ── */
+  --ink: #26221f;
+  --text: var(--ink);
+  --text-soft: #6e665e;
+  --text-muted: #a39a90;
+  --on-dark: #fbf8f3;
+  --on-dark-soft: #b9b0a6;
+  --line-dark: #3b3632;
+
+  /* ── 강조: 테라코타 하나. 보조색은 차트·라벨에만 ── */
+  --accent: #c2603c;
+  --accent-strong: #a14b2c;
+  --accent-tint: #f4e1d8;
+  --accent-on-dark: #e79a7b;
+  --slate: #4e6a86;
+  --slate-tint: #dfe7ef;
+  --sage: #7f9878;
+
+  /* ── 상태 ── */
+  --danger: #b42318;
+  --danger-tint: #fdeceb;
+
+  /* ── 타이포 ── */
+  --font-hand: "Gaegu", var(--font-sans);
+  --fs-display: clamp(2.4rem, 1.5rem + 3.4vw, 4.1rem);
+  --fs-h1: clamp(2.05rem, 1.5rem + 2.2vw, 3.2rem);
+  --fs-h2: clamp(1.7rem, 1.25rem + 1.9vw, 2.7rem);
+  --fs-lead: clamp(1.05rem, 0.98rem + 0.35vw, 1.22rem);
+  --tracking-tight: -0.035em;
+
+  /* ── 레이아웃 ── */
+  --maxw: 1200px;
+  --space-section: clamp(4.5rem, 3rem + 6vw, 8rem);
+
+  /* ── 형태: 소개서처럼 둥근 카드 ── */
+  --r-sm: 8px;
+  --r: 14px;
+  --r-lg: 22px;
+  --focus: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+  --lift: 0 12px 34px -18px color-mix(in srgb, var(--ink) 30%, transparent);
+
+  /* ── 모션 ── */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur: 0.24s;
+  --dur-slow: 0.6s;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+  scroll-padding-top: 80px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-sans);
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+::selection {
+  color: var(--ink);
+  background: var(--accent-tint);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border-radius: var(--r-sm);
+}
+
+h1,
+h2,
+h3 {
+  word-break: keep-all;
+  text-wrap: balance;
+  letter-spacing: var(--tracking-tight);
+  --tw-leading: 1.24;
+  line-height: 1.24;
+  font-weight: 800;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* ── 레이아웃 ── */
+.shell {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 5vw, 2.5rem);
+}
+.section {
+  padding-block: var(--space-section);
+  position: relative;
+}
+.section-alt {
+  background: var(--paper-2);
+}
+
+/* ── 타이포 ── */
+.t-display {
+  font-size: var(--fs-display);
+  line-height: 1.16;
+  letter-spacing: -0.045em;
+}
+.t-h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+}
+.t-h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.25;
+}
+.t-lead {
+  font-size: var(--fs-lead);
+  color: var(--text-soft);
+  line-height: 1.65;
+}
+.num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+.src {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 700;
+}
+
+/* 번호형 섹션 라벨: 01 ─ 받으실 것 */
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+.label-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  font-weight: 800;
+}
+.label-num::after {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  background: var(--line-strong);
+  vertical-align: middle;
+  margin-left: 0.6rem;
+}
+.on-dark .label {
+  color: var(--on-dark-soft);
+}
+.on-dark .label-num {
+  color: var(--accent-on-dark);
+}
+
+/* ── 버튼 ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.97rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+.btn-sm {
+  min-height: 38px;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-strong);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn-secondary:hover {
+  border-color: var(--ink);
+}
+.btn-light {
+  background: var(--on-dark);
+  color: var(--ink);
+}
+.btn-light:hover {
+  background: #fff;
+}
+.btn-ghost-dark {
+  background: transparent;
+  color: var(--on-dark);
+  border-color: var(--line-dark);
+}
+.btn-ghost-dark:hover {
+  border-color: var(--on-dark-soft);
+}
+.btn .arrow {
+  transition: transform var(--dur) var(--ease);
+}
+.btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+/* ── 태그·알약 ── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.badge-line {
+  display: inline-flex;
+  padding: 0.15rem 0.65rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+/* ── 패널 ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.panel-lift {
+  box-shadow: var(--lift);
+}
+
+/* ── 툰 요소: 말풍선·메모·컷 테두리 ── */
+.bubble {
+  position: relative;
+  display: inline-block;
+  background: #fff;
+  border: 2.5px solid var(--ink);
+  border-radius: 22px;
+  padding: 0.55rem 1.1rem;
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  white-space: pre-line;
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  border-right: 2.5px solid var(--ink);
+  border-bottom: 2.5px solid var(--ink);
+  transform: rotate(45deg);
+  bottom: -9px;
+  left: 50%;
+}
+.bubble-left::after {
+  left: 28px;
+}
+.memo {
+  background: var(--memo);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 10px 26px -14px color-mix(in srgb, var(--ink) 25%, transparent);
+}
+.tilt-l {
+  transform: rotate(-1.4deg);
+}
+.tilt-r {
+  transform: rotate(1deg);
+}
+.cut {
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* ── 막대 ── */
+.bar-track {
+  height: 100%;
+  background: var(--paper-2);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--line-strong);
+  border-radius: var(--r-sm);
+}
+.bar-fill.hl {
+  background: var(--accent);
+}
+
+/* ── 어두운 띠 (CTA·푸터) ── */
+.on-dark {
+  background: var(--ink);
+  color: var(--on-dark);
+}
+
+/* ── 입력 ── */
+.field {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r);
+  padding: 0.75rem 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.field::placeholder {
+  color: var(--text-muted);
+}
+.field:focus {
+  border-color: var(--accent);
+  box-shadow: var(--focus);
+}
+.toggle {
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text-soft);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.875rem;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.toggle:hover {
+  border-color: var(--ink);
+}
+.toggle[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+.check {
+  appearance: none;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.check:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.check:checked::after {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: translateY(-1px) rotate(-45deg);
+}
+.alert {
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  background: var(--danger-tint);
+  color: var(--danger);
+  border-radius: var(--r);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+.field-error {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--danger);
+}
+
+/* ── 스크롤 등장 ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  :before,
+  :after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ── 모바일 메뉴 (details 기반, JS 없음) ── */
+.mnav summary {
+  list-style: none;
+  cursor: pointer;
+}
+.mnav summary::-webkit-details-marker {
+  display: none;
+}
