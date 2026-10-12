@@ -1,4 +1,5 @@
 import { footer, site } from "@/content/site";
+import { Logo } from "./logo";
 
 // 마무리 띠 아래의 한 줄 푸터. 사업자 정보가 정해지면 같은 줄에 나온다.
 export function Footer() {
@@ -6,7 +7,7 @@ export function Footer() {
   return (
     <footer className="bg-black text-[var(--on-dark)]">
       <div className="shell flex flex-col gap-2 border-t border-[#2c2c2c] py-8 text-sm text-[var(--on-dark-soft)] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
-        <span className="font-semibold text-[var(--on-dark)]">{site.name}</span>
+        <Logo height={18} tone="white" />
         <span>{site.makers.map((m) => m.name).join(" · ")}</span>
         <a href={`mailto:${site.email}`} className="hover:text-[var(--on-dark)]">
           {site.email}

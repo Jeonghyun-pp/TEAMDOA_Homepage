@@ -1,11 +1,13 @@
 import Image from "next/image";
+import { Logo } from "@/components/logo";
 import { Reveal } from "@/components/reveal";
 import { TrackedLink } from "@/components/tracked-link";
 import { Rich } from "@/components/rich";
 import { PlanPicker } from "@/components/plan-picker";
+import { FieldTopics } from "@/components/field-topics";
 import { ArrowRight, Check } from "@/components/icons";
 import { CTA_LABEL, site } from "@/content/site";
-import { benefits, faq, finalCta, hero, makers, pricing, process, quotes, sample, work } from "@/content/home";
+import { benefits, episode, faq, finalCta, hero, makers, pricing, process, quotes, sample, topics, work } from "@/content/home";
 
 // 진행자 얼굴을 동그란 틀에 넣은 작은 아바타
 function HostAvatar({ src = "/img/host/wave.webp", size = "h-12 w-12" }: { src?: string; size?: string }) {
@@ -115,6 +117,19 @@ function CastCircle({ k, className }: { k: string; className: string }) {
   return <Image src={`/img/cast/${k}.webp`} alt="" aria-hidden="true" width={320} height={320} className={`rounded-full bg-[#fbf8f3] object-cover ${className}`} />;
 }
 
+// 견본 한 화 칸: 번호·단계 이름 + 색 바탕 위 실물
+function EpisodeStep({ n, step, tone, children }: { n: number; step: string; tone: string; children: React.ReactNode }) {
+  return (
+    <li className="flex flex-col">
+      <p className="mb-3 flex items-center gap-2.5 font-semibold">
+        <span className="num grid h-7 w-7 place-items-center rounded-full bg-[var(--ink)] text-xs text-white">{n}</span>
+        {step}
+      </p>
+      <div className={`${tone} flex flex-1 flex-col justify-center rounded-[var(--r-lg)] p-5`}>{children}</div>
+    </li>
+  );
+}
+
 // 만드는 사람 수를 한글 관형사로 ("세 사람이")
 const COUNT: Record<number, string> = { 1: "한", 2: "두", 3: "세", 4: "네", 5: "다섯" };
 
@@ -196,8 +211,15 @@ export default function Home() {
       {/* 만드는 사람: 점선 상자 한 단락 */}
       <Reveal>
         <section className="shell py-16">
-          <div className="dash mx-auto max-w-[46rem] px-6 py-12 text-center sm:px-14">
-            <p className="lead-grey text-lg leading-relaxed sm:text-xl">
+          <div className="dash mx-auto max-w-[46rem] px-6 py-12 text-center sm:px-14 sm:py-16">
+            <p className="text-balance font-[family-name:var(--font-serif)] text-[1.7rem] font-medium leading-snug tracking-[-0.04em] sm:text-[2.2rem]">
+              <Rich text={makers.vision} />
+            </p>
+            <p className="mx-auto mt-5 max-w-md text-lg leading-relaxed">
+              <Rich text={makers.visionSub} />
+            </p>
+            <hr className="mx-auto my-9 w-16 border-[var(--line-strong)]" />
+            <p className="lead-grey leading-relaxed sm:text-lg">
               {makers.lead}{" "}
               {site.makers.map((m, i) => (
                 <span key={m.name}>
@@ -250,6 +272,94 @@ export default function Home() {
         </section>
       </Reveal>
 
+      {/* 견본 한 화: 메모 → 콘티 → 점검표 → 완성본을 실물 그대로 네 칸에 */}
+      <Reveal>
+        <section className="shell py-20" id="episode">
+          <h2 className="t-h1 text-center">
+            <Rich text={episode.title} />
+          </h2>
+          <p className="lead-grey mx-auto mt-5 max-w-lg text-center text-lg">{episode.sub}</p>
+          <ol className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <EpisodeStep n={1} step={episode.memo.step} tone="g-warm">
+              <div className="memo tilt-l text-[var(--ink)]">
+                <p className="text-xs font-semibold text-[var(--text-soft)]">{episode.memo.field}</p>
+                <p className="hand mt-2 text-lg leading-snug">
+                  {episode.memo.lines.map((l) => (
+                    <span key={l} className="block">
+                      {l}
+                    </span>
+                  ))}
+                </p>
+                <p className="mt-3 border-t border-dashed border-[var(--line-strong)] pt-2 text-xs leading-relaxed">
+                  <span className="font-semibold">전하고 싶은 것</span> {episode.memo.lesson}
+                </p>
+              </div>
+              <p className="mt-4 flex flex-wrap gap-1.5 text-xs">
+                {episode.memo.deid.map((d) => (
+                  <span key={d} className="rounded-full bg-white/85 px-2 py-0.5 text-[var(--ink)]">
+                    <span className="line-through opacity-50">{d}</span> 바꿈
+                  </span>
+                ))}
+              </p>
+            </EpisodeStep>
+            <EpisodeStep n={2} step={episode.conti.step} tone="g-cool">
+              <div className="rounded-[var(--r)] bg-white p-4 text-[13px] leading-relaxed text-[var(--ink)] shadow-xl">
+                <p className="flex justify-between text-[11px] text-[var(--text-soft)]">
+                  <span>{episode.conti.page}</span>
+                  <span>{episode.conti.meta}</span>
+                </p>
+                {episode.conti.cuts.map((c, i) => (
+                  <div key={i} className="mt-3 border-t border-[var(--line)] pt-3">
+                    <p className="text-[11px] font-semibold text-[var(--text-soft)]">컷 {i + 1}</p>
+                    <p className="mt-1 italic">{c.narration}</p>
+                    {c.lines.map((l) => (
+                      <p key={l.text} className="mt-1">
+                        <span className="font-semibold">{l.who}</span> {"inner" in l && l.inner ? `(속으로) ${l.text}` : l.text}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </EpisodeStep>
+            <EpisodeStep n={3} step={episode.check.step} tone="g-green">
+              <div className="rounded-[var(--r)] bg-white p-4 text-[13px] text-[var(--ink)] shadow-xl">
+                <ul>
+                  {episode.check.items.map((c) => (
+                    <li key={c} className="flex items-center justify-between gap-2 border-b border-[var(--line)] py-1.5">
+                      {c}
+                      <Check size={14} className="shrink-0 text-[#5f8f6a]" />
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 rounded-md bg-[#fbf3e6] p-2.5 text-xs leading-relaxed">
+                  <p className="font-semibold">고친 곳 · {episode.check.fix.where}</p>
+                  <p className="mt-0.5">
+                    {episode.check.fix.problem} → {episode.check.fix.done}
+                  </p>
+                </div>
+                <p className="mt-3 text-[11px] leading-snug text-[var(--text-soft)]">{episode.check.note}</p>
+              </div>
+            </EpisodeStep>
+            <EpisodeStep n={4} step={episode.final.step} tone="g-sun">
+              <div className="mx-auto w-full max-w-[17rem] overflow-hidden rounded-[var(--r)] bg-white text-[var(--ink)] shadow-xl md:max-w-none">
+                <div className="flex aspect-[4/5] flex-col bg-[#f6efe6] p-5">
+                  <span className="w-fit rounded-full bg-[var(--ink)] px-2.5 py-0.5 text-xs font-semibold text-white">{episode.final.ep}</span>
+                  <p className="mt-auto font-[family-name:var(--font-serif)] text-[1.35rem] font-medium leading-tight tracking-[-0.04em]">
+                    <Rich text={episode.final.title} />
+                  </p>
+                  <p className="mt-3 text-xs leading-relaxed text-[var(--text-soft)]">{episode.final.line}</p>
+                  <p className="mt-4 text-[10px] text-[var(--text-soft)]">{episode.final.label}</p>
+                </div>
+                <div className="p-3.5 text-xs leading-relaxed">
+                  <p>{episode.final.caption}</p>
+                  <p className="mt-1 text-[#4a6c9b]">{episode.final.tags.join(" ")}</p>
+                </div>
+              </div>
+            </EpisodeStep>
+          </ol>
+        </section>
+      </Reveal>
+
       {/* 견본 카드 + 분야 태그 카드 */}
       <Reveal>
         <section className="shell grid gap-8 py-16 lg:grid-cols-[1.5fr_1fr]" id="sample">
@@ -298,6 +408,26 @@ export default function Home() {
               <Rich text={work.fieldsTitle} />
             </h3>
             <p className="lead-grey relative mt-2 text-lg">{work.fieldsSub}</p>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* 분야별 소재: 왼쪽 큰 제목, 오른쪽 분야 탭 카드 */}
+      <Reveal>
+        <section className="shell grid gap-12 py-20 lg:grid-cols-[1fr_1.3fr] lg:items-start" id="topics">
+          <div className="lg:sticky lg:top-10">
+            <h2 className="t-h1">
+              <Rich text={topics.title} />
+            </h2>
+            <p className="lead-grey mt-5 max-w-sm text-lg">{topics.sub}</p>
+            <div className="mt-10 hidden items-end lg:flex" aria-hidden="true">
+              {["cider", "jelly-red", "fox"].map((k) => (
+                <CastCircle key={k} k={k} className="-ml-4 h-24 w-24 border-4 border-[var(--page)] first:ml-0" />
+              ))}
+            </div>
+          </div>
+          <div className="rounded-[var(--r-lg)] bg-white p-7 sm:p-10">
+            <FieldTopics fields={topics.fields} checkLabel={topics.checkLabel} />
           </div>
         </section>
       </Reveal>
@@ -390,7 +520,7 @@ export default function Home() {
       <section className="bg-black text-white" id="apply">
         <div className="shell grid gap-14 pb-10 pt-20 sm:pt-24 lg:grid-cols-[1.35fr_1fr]">
           <div className="flex flex-col">
-            <p className="text-lg font-semibold tracking-[-0.02em]">{site.name}</p>
+            <Logo height={26} tone="white" />
             <h2 className="t-display mt-10">
               <Rich text={finalCta.title} />
               <br />
