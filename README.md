@@ -15,7 +15,7 @@ npm run build && npm start   # 배포 모드 확인
 | 바꿀 것 | 위치 |
 |---|---|
 | 색·글꼴·라운드·간격 | `app/globals.css`의 `:root` 토큰 (소개서 `base.css`와 같은 값) |
-| 홈 문구·숫자·출처 | `content/home.ts` |
+| 홈 문구·가격·FAQ·견본 장 목록 | `content/home.ts` (제목의 `*낱말*`은 손글씨 강조) |
 | 신청 폼 문구·분야 목록·동의 문구 | `content/consult.ts` |
 | 이름·메일·내비·사업자 정보 | `content/site.ts` (빈 값은 화면에 나오지 않는다) |
 | 진행자 캐릭터·그림체·표지 견본 | `public/img/` |
@@ -43,5 +43,4 @@ npm run build && npm start   # 배포 모드 확인
 - 신청을 받을 곳 → `CONSULT_WEBHOOK_URL`
 - 대표번호·사업자등록번호·주소 → `content/site.ts`
 - 정식 로고 → `components/logo.tsx`, `app/icon.tsx`
-- 히어로 문구 "만들고 운영합니다": 업로드를 고객이 하면 "만들어 드립니다"로 바꾼다 (소개서와 같이)
 - 그림체 견본은 지금 기존 시안 장면(가상)이다. 상담실 장면으로 새로 그리면 `public/img/style/`만 바꾼다

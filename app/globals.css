@@ -1,5 +1,5 @@
 @import "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css";
-@import "https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Noto+Serif+KR:wght@500&display=swap";
 @import "tailwindcss";
 
 /*
@@ -26,6 +26,8 @@
   /* ── 바탕 ── */
   --paper: #fbf8f3;
   --paper-2: #f3eee6;
+  /* 페이지 바탕: 흰 카드가 떠 보이도록 종이보다 한 톤 짙게 (Designjoy식 단색 바탕) */
+  --page: #ece7e4;
   --surface: #ffffff;
   --memo: #fffdf6;
   --line: #e6dfd5;
@@ -55,8 +57,9 @@
 
   /* ── 타이포 ── */
   --font-hand: "Gaegu", var(--font-sans);
-  --fs-display: clamp(2.4rem, 1.5rem + 3.4vw, 4.1rem);
-  --fs-h1: clamp(2.05rem, 1.5rem + 2.2vw, 3.2rem);
+  --font-serif: "Noto Serif KR", serif;
+  --fs-display: clamp(2.1rem, 1.4rem + 2.6vw, 3.4rem);
+  --fs-h1: clamp(1.85rem, 1.4rem + 1.6vw, 2.7rem);
   --fs-h2: clamp(1.7rem, 1.25rem + 1.9vw, 2.7rem);
   --fs-lead: clamp(1.05rem, 0.98rem + 0.35vw, 1.22rem);
   --tracking-tight: -0.035em;
@@ -90,7 +93,7 @@ html {
 }
 
 body {
-  background: var(--paper);
+  background: var(--page);
   color: var(--text);
   font-family: var(--font-sans);
   letter-spacing: -0.012em;
@@ -122,7 +125,7 @@ h3 {
   letter-spacing: var(--tracking-tight);
   --tw-leading: 1.24;
   line-height: 1.24;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 p,
@@ -148,8 +151,9 @@ li {
 /* ── 타이포 ── */
 .t-display {
   font-size: var(--fs-display);
-  line-height: 1.16;
-  letter-spacing: -0.045em;
+  line-height: 1.14;
+  letter-spacing: -0.055em;
+  font-weight: 600;
 }
 .t-h1 {
   font-size: var(--fs-h1);
@@ -491,4 +495,236 @@ li {
 }
 .mnav summary::-webkit-details-marker {
   display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────
+ *  홈 레이아웃 (Designjoy 구조 참고: 단색 바탕 + 세로 가이드선, 손글씨 강조 낱말,
+ *  색 카드, 점선 상자, 영문 고정폭 라벨). 색은 위 토큰만 쓴다.
+ * ───────────────────────────────────────────────────────────── */
+
+/* 콘텐츠 폭 양옆의 얇은 세로선 */
+.rails {
+  position: relative;
+}
+.rails::before,
+.rails::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+  pointer-events: none;
+  z-index: 0;
+}
+.rails::before {
+  left: max(0px, calc(50% - var(--maxw) / 2));
+}
+.rails::after {
+  right: max(0px, calc(50% - var(--maxw) / 2));
+}
+.rails > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 제목 속 강조 낱말: 명조, 색은 본문과 같게 (Designjoy의 이탤릭 세리프 자리) */
+.em-hand {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+}
+
+/* 영문 고정폭 라벨: PRICING */
+.eyebrow {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+/* 색 카드: 테라코타·청회색·세이지·잉크. 같은 색 계열 안에서만 옅게 번진다 */
+.tone {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+}
+.tone-terra {
+  background: radial-gradient(120% 90% at 85% 0%, #e7a283 0%, transparent 55%), linear-gradient(160deg, #c96a45, #a14b2c);
+}
+.tone-slate {
+  background: radial-gradient(120% 90% at 85% 0%, #a9bed2 0%, transparent 55%), linear-gradient(160deg, #5d7a97, #3e566e);
+}
+.tone-sage {
+  background: radial-gradient(120% 90% at 85% 0%, #c6d4bf 0%, transparent 55%), linear-gradient(160deg, #8ea586, #627a5b);
+}
+/* Designjoy식 번지는 그라데이션. 채도를 낮춰 소개서의 종이·테라코타 톤에 가깝게 맞춘다 */
+.g-warm {
+  background: radial-gradient(70% 60% at 20% 15%, #f3cf7a 0%, transparent 70%), radial-gradient(70% 70% at 90% 30%, #e9a06d 0%, transparent 70%),
+    radial-gradient(90% 80% at 40% 100%, #d98a86 0%, transparent 70%), #e6ad6a;
+}
+.g-cool {
+  background: radial-gradient(60% 60% at 80% 10%, #c9b3d6 0%, transparent 70%), radial-gradient(70% 70% at 15% 30%, #7d8fc4 0%, transparent 70%),
+    radial-gradient(80% 70% at 70% 100%, #4f63a6 0%, transparent 70%), #6276b5;
+}
+.g-sun {
+  background: radial-gradient(60% 60% at 85% 10%, #eab27c 0%, transparent 70%), radial-gradient(70% 70% at 10% 40%, #d4704a 0%, transparent 70%),
+    radial-gradient(80% 70% at 60% 100%, #b45a66 0%, transparent 70%), #cf7550;
+}
+.g-green {
+  background: radial-gradient(60% 60% at 80% 15%, #d6dda0 0%, transparent 70%), radial-gradient(70% 70% at 15% 50%, #86ad8d 0%, transparent 70%),
+    radial-gradient(80% 70% at 70% 100%, #5d8f8a 0%, transparent 70%), #7fa58a;
+}
+.g-pink {
+  background: radial-gradient(60% 60% at 20% 15%, #e7a6b6 0%, transparent 70%), radial-gradient(70% 70% at 90% 50%, #d07a86 0%, transparent 70%),
+    radial-gradient(80% 70% at 30% 100%, #9a7ab0 0%, transparent 70%), #cf8a98;
+}
+.tone-ink {
+  background: var(--ink);
+  color: var(--on-dark);
+}
+.tone .soft {
+  color: color-mix(in srgb, #fff 82%, transparent);
+}
+
+/* 점선 상자 */
+.dash {
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--r-lg);
+}
+.dash-dark {
+  border: 1px dashed var(--line-dark);
+  border-radius: var(--r);
+}
+
+/* 흰 알약 버튼(색 카드 위) */
+.btn-white {
+  background: #fff;
+  color: var(--ink);
+  border-radius: var(--r);
+  min-height: 56px;
+  font-size: 1.05rem;
+}
+.btn-white:hover {
+  background: var(--paper);
+}
+.round-btn {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+.round-btn:hover {
+  border-color: var(--ink);
+}
+
+/* 견본 캐러셀 */
+.snap-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 0 0 4px;
+  margin: 0;
+  list-style: none;
+}
+.snap-track::-webkit-scrollbar {
+  display: none;
+}
+.snap-card {
+  flex: 0 0 min(78vw, 340px);
+  scroll-snap-align: start;
+}
+
+/* 분야 칩 */
+.chip {
+  display: inline-flex;
+  padding: 0.3rem 0.72rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, #fff 60%, transparent);
+  font-size: 0.84rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-soft);
+}
+
+/* FAQ 아코디언 (details 기반) */
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary::after {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  transform: translateY(-3px) rotate(45deg);
+  transition: transform var(--dur) var(--ease);
+}
+.faq[open] summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+.faq + .faq {
+  border-top: 1px solid var(--line);
+}
+
+/* 유틸리티(hidden 등)가 이기도록 components 층에 둔다 */
+@layer components {
+/* 헤더의 작은 버튼 (Designjoy식 사각 알약) */
+.btn-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 0.95rem;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, #fff 55%, transparent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color var(--dur) var(--ease);
+}
+.btn-chip:hover {
+  border-color: var(--ink);
+}
+.btn-chip-dark {
+  background: linear-gradient(180deg, #3a3633, #111);
+  border-color: #000;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.btn-dark {
+  background: linear-gradient(180deg, #3a3633, #111);
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.lead-grey {
+  color: #8d8789;
+}
 }

@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: { title: site.title, description: site.ogDescription, url: "/", siteName: site.name, locale: "ko_KR", type: "website" },
   twitter: { card: "summary_large_image", title: site.title, description: site.ogDescription },
+  robots: site.indexable ? undefined : { index: false, follow: false },
 };
 
 const jsonLd = {

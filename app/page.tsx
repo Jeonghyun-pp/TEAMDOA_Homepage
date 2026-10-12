@@ -1,344 +1,423 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Reveal } from "@/components/reveal";
 import { TrackedLink } from "@/components/tracked-link";
-import { SectionLabel } from "@/components/section-label";
-import { CtaBand } from "@/components/cta-band";
-import { Host } from "@/components/host";
-import { ArrowRight } from "@/components/icons";
-import { CTA_LABEL } from "@/content/site";
-import { finalCta, hero, offer, process, report, safety, styles, whyInsta, whyToon } from "@/content/home";
+import { Rich } from "@/components/rich";
+import { PlanPicker } from "@/components/plan-picker";
+import { ArrowRight, Check } from "@/components/icons";
+import { CTA_LABEL, site } from "@/content/site";
+import { benefits, faq, finalCta, hero, makers, pricing, process, quotes, sample, work } from "@/content/home";
+
+// 진행자 얼굴을 동그란 틀에 넣은 작은 아바타
+function HostAvatar({ src = "/img/host/wave.webp", size = "h-12 w-12" }: { src?: string; size?: string }) {
+  return (
+    <span className={`grid shrink-0 place-items-start overflow-hidden rounded-full bg-white/90 ${size}`}>
+      <Image src={src} alt="" aria-hidden="true" width={430} height={565} className="mt-1 h-auto w-full" />
+    </span>
+  );
+}
+
+// 색 카드 맨 아래의 "아바타 + 두 줄 + 화살표" 줄
+function CardRow({ href, title, sub }: { href: string; title: string; sub: string }) {
+  const mail = href.startsWith("mailto:");
+  const inner = (
+    <>
+      {mail ? (
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white/20" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="M3.5 6.5 12 13l8.5-6.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      ) : (
+        <HostAvatar />
+      )}
+      <span className="min-w-0 flex-1 leading-tight">
+        <span className="block text-[15px] font-semibold">{title}</span>
+        <span className="block truncate text-sm opacity-75">{sub}</span>
+      </span>
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[var(--ink)]">
+        <ArrowRight size={16} />
+      </span>
+    </>
+  );
+  return mail ? (
+    <a href={href} className="flex items-center gap-3">
+      {inner}
+    </a>
+  ) : (
+    <TrackedLink href={href} event="cta_click" eventParams={{ location: "card_row", label: title }} className="flex items-center gap-3">
+      {inner}
+    </TrackedLink>
+  );
+}
+
+const COVERS = ["/img/sample/cover-pastel.webp", "/img/sample/cover-pen.webp", "/img/cast/woman.webp"];
+const FEED = ["rabbit", "longhair", "postman", "fox", "jelly-yellow", "woman"];
+
+// 장점 카드 안의 작은 물건: 연재 표지 묶음, 점검표, 메모, 가격, 인스타 프로필
+function BenefitVisual({ kind }: { kind: string }) {
+  if (kind === "covers")
+    return (
+      <div className="relative h-[62%] w-[70%]">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="absolute top-0 w-[54%] overflow-hidden rounded-md bg-white shadow-lg" style={{ left: `${i * 23}%`, transform: `rotate(${[-8, 0, 8][i]}deg) translateY(${[6, 0, 6][i]}px)` }}>
+            <Image src={COVERS[i]} alt="" width={720} height={900} className="aspect-[4/5] w-full object-cover object-top" />
+            <span className="block py-0.5 text-center text-[10px] font-semibold text-[var(--ink)]">{i + 1}화</span>
+          </span>
+        ))}
+      </div>
+    );
+  if (kind === "check")
+    return (
+      <ul className="w-[72%] rounded-xl bg-white p-3 text-[11px] text-[var(--ink)] shadow-lg">
+        {["과장 표현", "\"전문\" 표기", "후기형 장면"].map((c) => (
+          <li key={c} className="flex items-center justify-between border-b border-[var(--line)] py-1.5 last:border-0">
+            {c}
+            <Check size={12} className="text-[#5f8f6a]" />
+          </li>
+        ))}
+      </ul>
+    );
+  if (kind === "memo")
+    return (
+      <div className="memo w-[72%] -rotate-3 !p-3 text-[var(--ink)]">
+        <p className="hand text-[13px] leading-snug">
+          <span className="line-through opacity-50">김○○</span> → 30대 직장인
+          <br />
+          <span className="line-through opacity-50">서초동</span> → 어느 도시
+        </p>
+      </div>
+    );
+  if (kind === "price")
+    return (
+      <p className="num text-center text-white drop-shadow">
+        <span className="block text-5xl font-semibold tracking-[-0.05em]">150</span>
+        <span className="text-sm font-semibold">만원 / 월</span>
+      </p>
+    );
+  return (
+    <div className="w-[70%] rounded-xl bg-white p-2.5 shadow-lg">
+      <div className="flex items-center gap-2">
+        <span className="h-6 w-6 rounded-full bg-[var(--accent-tint)]" />
+        <span className="text-[10px] font-semibold text-[var(--ink)]">○○ 법률사무소</span>
+      </div>
+      <div className="mt-2 grid grid-cols-3 gap-0.5">
+        {FEED.map((k) => (
+          <Image key={k} src={`/img/cast/${k}.webp`} alt="" width={320} height={320} className="aspect-square w-full bg-[#fbf8f3] object-cover" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// 동그란 틀 안의 캐릭터 얼굴. 그동안 그린 캐릭터 시안(사람·동물·젤리빈·진행자 후보)에서 잘라 왔다 (public/img/cast/)
+function CastCircle({ k, className }: { k: string; className: string }) {
+  return <Image src={`/img/cast/${k}.webp`} alt="" aria-hidden="true" width={320} height={320} className={`rounded-full bg-[#fbf8f3] object-cover ${className}`} />;
+}
+
+// 만드는 사람 수를 한글 관형사로 ("세 사람이")
+const COUNT: Record<number, string> = { 1: "한", 2: "두", 3: "세", 4: "네", 5: "다섯" };
 
 export default function Home() {
   return (
-    <>
-      {/* HERO: 메시지 / 창작툰 표지 견본 */}
-      <section className="relative overflow-hidden">
-        <div className="shell grid items-center gap-14 pb-20 pt-14 sm:pt-20 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:pb-28 lg:pt-24">
-          <div>
-            <span className="tag">{hero.kicker}</span>
-            <h1 className="t-display mt-6 whitespace-pre-line">{hero.title}</h1>
-            <p className="t-lead mt-6 max-w-[34rem]">{hero.sub}</p>
-            <p className="t-lead mt-3 max-w-[34rem]">{hero.sub2}</p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "hero", label: CTA_LABEL }} className="btn btn-primary">
-                {CTA_LABEL}
-                <ArrowRight className="arrow" size={16} />
-              </TrackedLink>
-              <Link href="#offer" className="btn btn-secondary">
-                {hero.secondary}
-              </Link>
-            </div>
-            <p className="mt-6 text-sm font-semibold text-[var(--accent-strong)]">{hero.note}</p>
+    <div className="rails">
+      {/* HERO: 왼쪽 큰 제목 + 회색 한 줄, 오른쪽 색 카드 */}
+      <section className="shell grid items-center gap-12 pb-24 pt-6 lg:grid-cols-[1.35fr_1fr] lg:gap-10 lg:pb-32 lg:pt-10">
+        <div>
+          <h1 className="t-display">
+            <Rich text={hero.title} />
+          </h1>
+          <p className="lead-grey mt-7 text-lg">{hero.sub}</p>
+        </div>
+        <div className="g-cool relative overflow-hidden rounded-[var(--r-lg)] p-7 text-white sm:p-8">
+          <Image src={sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} preload className="absolute -right-5 -top-3 w-24 rotate-[9deg] rounded-md shadow-xl sm:w-44" />
+          <span className="relative inline-flex items-center gap-2 rounded-full bg-black px-3.5 py-1.5 text-sm font-semibold">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#f2c14e]" aria-hidden="true" />
+            {hero.card.pill}
+          </span>
+          <p className="relative mt-20 text-4xl font-semibold leading-[1.1] tracking-[-0.045em] sm:mt-24 sm:text-[2.7rem]">
+            <Rich text={hero.card.title} />
+          </p>
+          <p className="relative mt-3 opacity-90">{hero.card.sub}</p>
+          <TrackedLink href="/#pricing" event="cta_click" eventParams={{ location: "hero_card", label: hero.card.cta }} className="relative mt-7 flex h-14 items-center justify-center rounded-[8px] bg-white text-lg font-semibold text-[var(--ink)]">
+            {hero.card.cta}
+          </TrackedLink>
+          <div className="relative mt-6">
+            <CardRow href="/consult" title={hero.card.rowTitle} sub={hero.card.rowSub} />
           </div>
-          <figure className="relative mx-auto w-full max-w-[460px]">
-            <div className="relative aspect-[4/5]">
-              <Image src={hero.samples[1].src} alt={hero.samples[1].alt} width={864} height={1080} className="cut absolute right-0 top-0 w-[72%] rotate-[4deg]" />
-              <Image src={hero.samples[0].src} alt={hero.samples[0].alt} width={864} height={1080} preload className="cut absolute bottom-0 left-0 w-[80%] -rotate-[2deg] shadow-[var(--lift)]" />
-            </div>
-            <figcaption className="src mt-4 text-center">{hero.samplesNote}</figcaption>
-          </figure>
         </div>
       </section>
 
-      {/* 01 받으실 것 */}
+      {/* 3단계: 가운데 큰 제목 + 그라데이션 카드 세 장 */}
       <Reveal>
-        <section className="section section-alt scroll-mt-16" id="offer">
-          <div className="shell">
-            <SectionLabel num="01">{offer.label}</SectionLabel>
-            <h2 className="t-h2 mt-5">{offer.title}</h2>
-            <div className="mt-12 grid items-center gap-10 lg:grid-cols-[0.8fr_auto_1.4fr] lg:gap-8">
-              <div className="flex flex-col gap-5">
-                <p className="text-sm font-bold text-[var(--text-soft)]">보내 주실 것</p>
-                <div className="memo tilt-l">
-                  <p className="font-bold">{offer.send.title}</p>
-                  <p className="hand mt-2 text-xl leading-snug text-[var(--text-soft)]">
-                    {offer.send.lines.map((l) => (
-                      <span key={l} className="block">
-                        {l}
-                      </span>
-                    ))}
-                  </p>
-                  <p className="src mt-3">{offer.send.note}</p>
-                </div>
-                <p className="text-center text-sm font-bold text-[var(--text-muted)]">{offer.send.or}</p>
-                <p className="bubble bubble-left self-start">{offer.send.ask}</p>
-                <p className="mt-2 text-sm font-semibold">{offer.send.rule}</p>
-              </div>
-              <div aria-hidden="true" className="hidden text-5xl font-bold text-[var(--accent)] lg:block">
-                →
-              </div>
-              <div className="flex flex-col gap-3">
-                <p className="text-sm font-bold text-[var(--text-soft)]">받으실 것</p>
-                {offer.items.map((it) => (
-                  <div key={it.name} className="panel flex flex-col gap-1 p-5 sm:p-6">
-                    <p className="text-xl font-extrabold tracking-[-0.02em]">
-                      {it.name} <span className="ml-1 text-sm font-semibold text-[var(--text-soft)]">{it.meta}</span>
-                    </p>
-                    <p className="text-[15px] text-[var(--text-soft)]">{it.body}</p>
-                  </div>
-                ))}
-                <p className="mt-2 text-sm font-semibold">{offer.also}</p>
-                <p className="src">{offer.foot}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-      </Reveal>
-
-      {/* 02 왜 인스타그램: 큰 막대 하나 + 진행자 */}
-      <Reveal>
-        <section className="section">
-          <div className="shell">
-            <SectionLabel num="02">{whyInsta.label}</SectionLabel>
-            <h2 className="t-h2 mt-5 whitespace-pre-line">{whyInsta.title}</h2>
-            <div className="mt-12 grid items-end gap-10 lg:grid-cols-[1fr_220px]">
-              <div>
-                <p className="font-bold text-[var(--text-soft)]">{whyInsta.chartTitle}</p>
-                <dl className="mt-6 flex flex-col gap-4">
-                  {whyInsta.bars.map((b) => (
-                    <div key={b.k} className="grid grid-cols-[6.5rem_1fr_3.5rem] items-center gap-3 sm:grid-cols-[9rem_1fr_6.5rem] sm:gap-5">
-                      <dt className={`text-[15px] font-bold sm:text-lg ${b.hl ? "text-[var(--accent)]" : ""}`}>{b.k}</dt>
-                      <dd className="h-10 sm:h-12">
-                        <div className="bar-track">
-                          <div className={`bar-fill ${b.hl ? "hl" : ""}`} style={{ width: `${b.v}%` }} />
-                        </div>
-                      </dd>
-                      <dd className={`num whitespace-nowrap text-right text-2xl font-extrabold sm:text-4xl ${b.hl ? "text-[var(--accent)]" : ""}`}>{b.v}%</dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className="src mt-4">{whyInsta.chartSrc}</p>
-              </div>
-              <Host {...whyInsta.host} className="hidden lg:flex" imgClass="w-28" />
-            </div>
-            <dl className="mt-14 grid grid-cols-1 gap-px border-t-2 border-[var(--line)] pt-6 sm:grid-cols-2 lg:grid-cols-4">
-              {whyInsta.strip.map((s) => (
-                <div key={s.d} className="py-3 sm:pr-6">
-                  <dd className="num text-2xl font-extrabold sm:text-3xl">
-                    {s.n}
-                    <span className="ml-0.5 text-base font-bold">{s.unit}</span>
-                  </dd>
-                  <dt className="mt-1 text-sm text-[var(--text-soft)]">{s.d}</dt>
-                </div>
-              ))}
-            </dl>
-            <p className="src mt-4">{whyInsta.src}</p>
-          </div>
-        </section>
-      </Reveal>
-
-      {/* 03 왜 툰: 비교 막대 두 쌍 + 진행자 */}
-      <Reveal>
-        <section className="section section-alt">
-          <div className="shell">
-            <SectionLabel num="03">{whyToon.label}</SectionLabel>
-            <h2 className="t-h2 mt-5 whitespace-pre-line">{whyToon.title}</h2>
-            <p className="t-lead mt-4">{whyToon.sub}</p>
-            <div className="mt-12 grid items-center gap-12 lg:grid-cols-[1fr_1fr_220px]">
-              {whyToon.pairs.map((p) => (
-                <div key={p.h}>
-                  <h3 className="text-xl font-extrabold sm:text-2xl">{p.h}</h3>
-                  <p className="text-sm text-[var(--text-soft)]">{p.what}</p>
-                  {[
-                    { k: "툰", v: p.toon, hl: true },
-                    { k: "글", v: p.text, hl: false },
-                  ].map((r) => (
-                    <div key={r.k} className="mt-4 grid grid-cols-[2.5rem_1fr_4.5rem] items-center gap-3">
-                      <span className={`font-bold ${r.hl ? "text-[var(--accent)]" : "text-[var(--text-soft)]"}`}>{r.k}</span>
-                      <div className="h-10">
-                        <div className="bar-track">
-                          <div className={`bar-fill ${r.hl ? "hl" : ""}`} style={{ width: `${r.v}%` }} />
-                        </div>
-                      </div>
-                      <b className={`num text-right text-3xl font-extrabold ${r.hl ? "text-[var(--accent)]" : "text-[var(--text-muted)]"}`}>{r.v}%</b>
-                    </div>
-                  ))}
-                </div>
-              ))}
-              <Host {...whyToon.host} imgClass="w-36" className="lg:mt-0" />
-            </div>
-            <dl className="mt-14 grid gap-px border-t-2 border-[var(--line)] pt-6 sm:grid-cols-2">
-              {whyToon.strip.map((s) => (
-                <div key={s.n} className="py-3 sm:pr-8">
-                  <dd className="num text-2xl font-extrabold sm:text-3xl">{s.n}</dd>
-                  <dt className="mt-1 text-sm text-[var(--text-soft)]">{s.d}</dt>
-                </div>
-              ))}
-            </dl>
-            <p className="src mt-4">{whyToon.src}</p>
-          </div>
-        </section>
-      </Reveal>
-
-      {/* 04 하실 일: 6단계 + 추천 소재 메모 */}
-      <Reveal>
-        <section className="section scroll-mt-16" id="process">
-          <div className="shell">
-            <SectionLabel num="04">{process.label}</SectionLabel>
-            <h2 className="t-h2 mt-5">{process.title}</h2>
-            <ol className="relative mt-12 grid gap-6 sm:grid-cols-3 lg:grid-cols-6 lg:gap-2">
-              <span aria-hidden="true" className="absolute left-[8%] right-[8%] top-7 hidden h-[3px] bg-[var(--line)] lg:block" />
-              {process.steps.map((s, i) => (
-                <li key={s.t} className="relative flex items-start gap-4 lg:flex-col lg:items-center lg:text-center">
-                  <span
-                    className={`num grid h-14 w-14 shrink-0 place-items-center rounded-full border-[3px] text-xl font-extrabold ${
-                      s.you ? "border-[var(--accent)] bg-[var(--accent)] text-white" : "border-[var(--line)] bg-[var(--paper)] text-[var(--text-muted)]"
-                    }`}
-                  >
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className={`text-lg font-extrabold lg:mt-3 ${s.you ? "text-[var(--accent)]" : ""}`}>{s.t}</h3>
-                    <p className="text-sm text-[var(--text-soft)]">{s.d}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-6 flex items-center gap-2 text-sm text-[var(--text-soft)]">
-              <span className="inline-block h-3 w-3 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-              {process.youLabel}
-            </p>
-            <div className="mt-14 grid items-end gap-10 lg:grid-cols-[240px_1fr]">
-              <Host {...process.host} imgClass="w-36" />
-              <ul className="grid gap-6 sm:grid-cols-3">
-                {process.memos.map((m, i) => (
-                  <li key={m.f} className={`memo ${i % 2 ? "tilt-r" : "tilt-l"}`}>
-                    <p className="text-sm font-bold text-[var(--slate)]">{m.f}</p>
-                    <p className="hand mt-1 whitespace-pre-line text-2xl leading-snug">{m.t}</p>
-                    <p className="src mt-2">{m.p}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <p className="src mt-10">{process.foot}</p>
-          </div>
-        </section>
-      </Reveal>
-
-      {/* 05 규정 점검: 점검표 견본 + 진행자 */}
-      <Reveal>
-        <section className="section section-alt scroll-mt-16" id="safety">
-          <div className="shell">
-            <SectionLabel num="05">{safety.label}</SectionLabel>
-            <h2 className="t-h2 mt-5">{safety.title}</h2>
-            <div className="mt-12 grid gap-12 lg:grid-cols-[1.3fr_1fr]">
-              <div className="panel panel-lift relative min-w-0 p-6 sm:p-9">
-                <span className="badge-line absolute right-5 top-5">{safety.sheet.badge}</span>
-                <h3 className="pr-24 text-lg font-extrabold sm:text-xl">{safety.sheet.title}</h3>
-                <p className="mt-1 text-sm text-[var(--text-soft)]">{safety.sheet.meta}</p>
-                <div className="mt-6">
-                  <table className="w-full border-collapse text-sm sm:text-[15px]">
-                    <thead>
-                      <tr>
-                        {safety.sheet.head.map((h, i) => (
-                          <th key={h} className={`border-b-2 border-[var(--ink)] pb-2 text-sm font-bold text-[var(--text-soft)] ${i === 2 ? "text-right" : "text-left"}`}>
-                            {h}
-                          </th>
+        <section className="shell pb-10" id="process">
+          <h2 className="t-h1 text-center">
+            <Rich text={process.title} />
+          </h2>
+          <ol className="mt-14 grid gap-8 md:grid-cols-3">
+            {process.steps.map((s, i) => (
+              <li key={s.t} className={`${s.tone} relative flex min-h-[25rem] flex-col overflow-hidden rounded-[var(--r-lg)] p-8 text-white`}>
+                <div className="flex flex-1 items-center justify-center pb-8">
+                  {i === 0 ? (
+                    <div className="memo tilt-l w-full max-w-[15rem] text-[var(--ink)]">
+                      <p className="text-xs font-semibold text-[var(--text-soft)]">사연 메모</p>
+                      <p className="hand mt-1 text-lg leading-snug">
+                        {process.memo.map((l) => (
+                          <span key={l} className="block">
+                            {l}
+                          </span>
                         ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {safety.sheet.rows.map((r) => (
-                        <tr key={r.k} className="border-b border-[var(--line)] align-top">
-                          <td className="w-24 py-4 pr-3 font-bold sm:w-40">{r.k}</td>
-                          <td className="py-4 pr-3 text-[var(--text-soft)]">{r.c}</td>
-                          <td className={`w-20 py-4 text-right font-bold sm:w-24 ${r.fix ? "text-[var(--accent)]" : "text-[var(--sage)]"}`}>{r.r}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <p className="mt-5 text-sm text-[var(--text-soft)]">{safety.sheet.sign}</p>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-end gap-2">
-                  <Host src={safety.host.src} w={safety.host.w} h={safety.host.h} imgClass="w-32" />
-                  <p className="bubble bubble-left mb-24">{safety.host.say}</p>
-                </div>
-                <ul className="mt-4">
-                  {safety.points.map((p) => (
-                    <li key={p.t} className="border-t border-[var(--line-strong)] py-4">
-                      <p className="text-lg font-extrabold">{p.t}</p>
-                      <p className="mt-0.5 text-sm text-[var(--text-soft)]">{p.d}</p>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 leading-relaxed">
-                  {safety.found} <span className="text-sm text-[var(--text-muted)]">{safety.foundDate}</span>
-                </p>
-              </div>
-            </div>
-            <p className="src mt-10">{safety.src}</p>
-          </div>
-        </section>
-      </Reveal>
-
-      {/* 06 보고: 보고서 견본 + 문단 */}
-      <Reveal>
-        <section className="section">
-          <div className="shell">
-            <SectionLabel num="06">{report.label}</SectionLabel>
-            <h2 className="t-h2 mt-5">{report.title}</h2>
-            <div className="mt-12 grid items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
-              <div className="panel panel-lift relative p-6 sm:p-9">
-                <span className="badge-line absolute right-5 top-5">{report.sample.badge}</span>
-                <p className="pr-32 font-bold text-[var(--text-soft)]">{report.sample.title}</p>
-                <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  {report.sample.metrics.map((m) => (
-                    <div key={m.k} className={`rounded-[var(--r)] p-4 ${m.hl ? "bg-[var(--slate-tint)]" : "bg-[var(--paper)]"}`}>
-                      <dt className="text-sm font-semibold text-[var(--text-soft)]">{m.k}</dt>
-                      <dd className={`num mt-0.5 font-extrabold ${m.small ? "text-base text-[var(--text-soft)]" : "text-2xl sm:text-3xl"} ${m.hl ? "text-[var(--slate)]" : ""}`}>{m.v}</dd>
+                      </p>
                     </div>
-                  ))}
-                </dl>
-                <p className="mt-5 rounded-[var(--r)] bg-[var(--accent-tint)] px-4 py-3 text-sm font-bold text-[var(--accent-strong)]">{report.sample.next}</p>
-                <p className="src mt-3">{report.sample.note}</p>
-              </div>
-              <div className="relative">
-                {report.paras.map((p, i) => (
-                  <p key={p} className={`text-xl font-bold leading-relaxed sm:text-2xl ${i ? "mt-6" : ""}`}>
-                    {p}
-                  </p>
-                ))}
-                <p className="src mt-2">{report.src}</p>
-                <Image src={report.host.src} alt="" aria-hidden="true" width={report.host.w} height={report.host.h} className="ml-auto mt-6 h-auto w-32" />
-              </div>
-            </div>
+                  ) : i === 1 ? (
+                    <ul className="w-full max-w-[15rem] rounded-[var(--r)] bg-white p-4 text-sm text-[var(--ink)] shadow-xl">
+                      {process.checks.map((c) => (
+                        <li key={c} className="flex items-center justify-between border-b border-[var(--line)] py-2 last:border-0">
+                          {c}
+                          <Check size={16} className="text-[#5f8f6a]" />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="relative h-44 w-full">
+                      <Image src={sample.pages[1]?.src ?? sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} className="absolute left-[18%] top-0 w-28 -rotate-6 rounded-md shadow-xl" />
+                      <Image src={sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} className="absolute right-[18%] top-3 w-28 rotate-6 rounded-md shadow-xl" />
+                    </div>
+                  )}
+                </div>
+                <h3 className="text-2xl font-semibold">{s.t}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed opacity-90">{s.d}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </Reveal>
+
+      {/* 만드는 사람: 점선 상자 한 단락 */}
+      <Reveal>
+        <section className="shell py-16">
+          <div className="dash mx-auto max-w-[46rem] px-6 py-12 text-center sm:px-14">
+            <p className="lead-grey text-lg leading-relaxed sm:text-xl">
+              {makers.lead}{" "}
+              {site.makers.map((m, i) => (
+                <span key={m.name}>
+                  {i ? ", " : ""}
+                  <span className="text-[var(--ink)] underline underline-offset-4">{m.name}</span>
+                </span>
+              ))}{" "}
+              {COUNT[site.makers.length] ?? site.makers.length} {makers.body}
+            </p>
           </div>
         </section>
       </Reveal>
 
-      {/* 07 그림체: 같은 장면 6가지 */}
+      {/* 장점: 영문 라벨 + 큰 제목 + 정사각 그라데이션 카드 다섯 */}
       <Reveal>
-        <section className="section section-alt scroll-mt-16" id="styles">
-          <div className="shell">
-            <SectionLabel num="07">{styles.label}</SectionLabel>
-            <h2 className="t-h2 mt-5">{styles.title}</h2>
-            <p className="t-lead mt-4">{styles.sub}</p>
-            <ul className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-              {styles.items.map((s) => (
-                <li key={s.key}>
-                  <figure>
-                    <Image
-                      src={`/img/style/${s.key}.webp`}
-                      alt={`${s.name} 그림체 견본`}
-                      width={720}
-                      height={1080}
-                      sizes="(min-width: 1024px) 190px, (min-width: 640px) 33vw, 50vw"
-                      className="aspect-[4/5] w-full rounded-[var(--r)] border border-[var(--line)] bg-white object-cover object-top"
-                    />
-                    <figcaption className="mt-2 text-center text-sm font-bold">{s.name}</figcaption>
-                  </figure>
+        <section className="shell py-20">
+          <span className="eyebrow text-center">{benefits.eyebrow}</span>
+          <h2 className="t-h1 mt-4 text-center">
+            <Rich text={benefits.title} />
+          </h2>
+          <p className="lead-grey mx-auto mt-5 max-w-lg text-center text-lg">{benefits.sub}</p>
+          <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-5">
+            {benefits.items.map((b) => {
+              return (
+                <li key={b.t}>
+                  <div className={`${b.tone} grid aspect-square place-items-center overflow-hidden rounded-[var(--r-lg)]`} aria-hidden="true">
+                    <BenefitVisual kind={b.visual} />
+                  </div>
+                  <h3 className="mt-5 text-xl font-semibold">{b.t}</h3>
+                  <p className="lead-grey mt-1 text-sm leading-relaxed">{b.d}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      </Reveal>
+
+      {/* 숫자 인용: 후기 자리에 출처가 있는 숫자를 큰 명조로 */}
+      <Reveal>
+        <section className="shell py-16" id="why">
+          <ul className="grid gap-x-12 gap-y-16 md:grid-cols-2">
+            {quotes.map((q) => (
+              <li key={q.q} className="text-center">
+                <p className="text-balance font-[family-name:var(--font-serif)] text-2xl leading-snug tracking-[-0.04em] sm:text-[2rem]">“{q.q}”</p>
+                <p className="mt-5 font-semibold">{q.who}</p>
+                <p className="lead-grey text-sm">{q.meta}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </Reveal>
+
+      {/* 견본 카드 + 분야 태그 카드 */}
+      <Reveal>
+        <section className="shell grid gap-8 py-16 lg:grid-cols-[1.5fr_1fr]" id="sample">
+          <div className="overflow-hidden rounded-[var(--r-lg)] bg-white">
+            <div className="relative h-72 overflow-hidden sm:h-80">
+              {["A", "H", "D", "M2"].map((k, i) => (
+                <Image
+                  key={k}
+                  src={`/img/lineup/${k}.webp`}
+                  alt=""
+                  aria-hidden="true"
+                  width={836}
+                  height={470}
+                  className="absolute w-60 rounded-md border border-[var(--line)] bg-white shadow-lg sm:w-72"
+                  style={{ left: `${[2, 30, 8, 40][i]}%`, top: `${[12, 6, 52, 46][i]}%`, transform: `rotate(${[-6, 5, 3, -4][i]}deg)` }}
+                />
+              ))}
+            </div>
+            <div className="px-7 pb-9 sm:px-14">
+              <div className="grid gap-3 sm:grid-cols-2">
+                {work.badges.map((b) => (
+                  <div key={b.t} className="rounded-[var(--r)] border border-[var(--line)] p-4">
+                    <p className="font-semibold">{b.t}</p>
+                    <p className="lead-grey text-sm">{b.d}</p>
+                  </div>
+                ))}
+              </div>
+              <h3 className="mt-8 text-2xl font-semibold">{work.title}</h3>
+              <p className="lead-grey mt-1 text-lg">{work.sub}</p>
+              <TrackedLink href="/samples" event="cta_click" eventParams={{ location: "work", label: work.cta }} className="btn-dark mt-6 inline-flex h-11 items-center px-5 font-semibold">
+                {work.cta}
+              </TrackedLink>
+            </div>
+          </div>
+          <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[var(--r-lg)] bg-white px-8 py-14 text-center">
+            <CastCircle k="fox" className="absolute -left-10 top-6 hidden h-28 w-28 border border-[var(--line)] sm:block" />
+            <CastCircle k="woman" className="absolute -right-10 bottom-16 hidden h-28 w-28 border border-[var(--line)] sm:block" />
+            <ul className="relative flex max-w-[20rem] flex-wrap justify-center gap-2">
+              {work.tags.map((t) => (
+                <li key={t} className="rounded-full border border-[var(--line-strong)] px-3.5 py-1.5 text-sm">
+                  {t}
                 </li>
               ))}
             </ul>
-            <p className="src mt-6">{styles.foot}</p>
+            <h3 className="relative mt-10 text-2xl font-semibold leading-snug">
+              <Rich text={work.fieldsTitle} />
+            </h3>
+            <p className="lead-grey relative mt-2 text-lg">{work.fieldsSub}</p>
           </div>
         </section>
       </Reveal>
 
-      <CtaBand title={finalCta.title} sub={finalCta.sub} cta={finalCta.cta} location="final_cta" />
-    </>
+      {/* 가격: 왼쪽 흰 카드 + 오른쪽 검정 카드, 아래 점선 카드 두 장 */}
+      <Reveal>
+        <section className="shell scroll-mt-10 py-24" id="pricing">
+          <span className="eyebrow text-center">{pricing.eyebrow}</span>
+          <h2 className="t-h1 mt-4 text-center">
+            <Rich text={pricing.title} />
+          </h2>
+          <div className="mt-16 grid gap-8 lg:grid-cols-[1fr_1.45fr]">
+            <div className="relative flex min-h-[26rem] flex-col justify-end rounded-[var(--r-lg)] bg-white p-8 sm:p-10">
+              <Image src={sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} className="absolute -left-4 -top-10 w-48 -rotate-[14deg] rounded-lg shadow-2xl sm:w-56" />
+              <Image src={sample.pages[1]?.src ?? sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} className="absolute left-36 -top-4 w-40 rotate-[8deg] rounded-lg shadow-2xl sm:left-44 sm:w-48" />
+              <span className="relative inline-flex w-fit items-center gap-2 rounded-full bg-black px-3.5 py-1.5 text-sm font-semibold text-white">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#f2c14e]" aria-hidden="true" />
+                {pricing.left.pill}
+              </span>
+              <p className="relative mt-5 text-4xl font-semibold leading-[1.1] tracking-[-0.045em] sm:text-5xl">
+                <Rich text={pricing.left.title} />
+              </p>
+            </div>
+            <div className="relative overflow-hidden rounded-[var(--r-lg)] bg-black p-8 text-white shadow-2xl sm:p-10">
+              <div className="flex items-center justify-between gap-3 border-b border-dashed border-[#3b3632] pb-7">
+                <p className="text-2xl font-semibold">{pricing.name}</p>
+                <span className="rounded-md border border-[#3b3632] px-2.5 py-1 text-[11px] text-[var(--on-dark-soft)]">{pricing.tag}</span>
+              </div>
+              <div className="mt-7">
+                <PlanPicker plans={pricing.plans} defaultPlan={pricing.defaultPlan} common={pricing.common} />
+              </div>
+              <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "pricing", label: pricing.cta }} className="relative mt-8 inline-flex items-center gap-3 rounded-[10px] border border-[#3b3632] bg-[#1c1a19] py-2 pl-2 pr-5 font-semibold">
+                <span className="g-sun grid h-11 w-11 place-items-center rounded-[8px]">
+                  <ArrowRight size={18} />
+                </span>
+                {pricing.cta}
+              </TrackedLink>
+              <CastCircle k="raccoon" className="absolute -bottom-8 -right-8 h-36 w-36 border-4 border-[#1c1a19]" />
+            </div>
+          </div>
+          <ul className="mt-8 grid gap-8 md:grid-cols-2">
+            {pricing.notes.map((n) => (
+              <li key={n.t} className="dash p-8">
+                <p className="flex items-center gap-2.5 text-xl font-semibold">
+                  <span className="grid h-6 w-6 place-items-center rounded-full border-[1.5px] border-[var(--ink)]">
+                    <Check size={12} />
+                  </span>
+                  {n.t}
+                </p>
+                <p className="lead-grey mt-2">{n.d}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="lead-grey mt-6 text-center text-sm">{pricing.foot}</p>
+        </section>
+      </Reveal>
+
+      {/* FAQ: 왼쪽 큰 제목 + 아코디언, 오른쪽 색 카드 */}
+      <section className="shell py-24" id="faq">
+        <div className="grid gap-14 lg:grid-cols-[1.45fr_1fr] lg:items-start">
+          <div>
+            <h2 className="t-display">
+              <Rich text={faq.title} />
+            </h2>
+            <div className="mt-10">
+              {faq.items.map((f) => (
+                <details key={f.q} className="faq">
+                  <summary>{f.q}</summary>
+                  <p className="lead-grey pb-5 pr-8">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+          <div className="g-warm rounded-[var(--r-lg)] p-8 text-white shadow-2xl sm:p-9 lg:sticky lg:top-10">
+            <HostAvatar size="h-28 w-28 border-4 border-black/80" />
+            <p className="mt-6 text-4xl font-semibold leading-[1.1] tracking-[-0.045em]">
+              <Rich text={faq.card.title} />
+            </p>
+            <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "faq_card", label: faq.card.cta }} className="mt-7 flex h-14 items-center justify-center rounded-[8px] bg-white text-lg font-semibold text-[var(--ink)]">
+              {faq.card.cta}
+            </TrackedLink>
+            <div className="mt-6">
+              <CardRow href={`mailto:${site.email}`} title={faq.card.mailTitle} sub={site.email} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 마무리: 검정 바탕, 큰 제목 + 괄호 명조, 오른쪽 단계 카드, 아래 진행자들 */}
+      <section className="bg-black text-white" id="apply">
+        <div className="shell grid gap-14 pb-10 pt-20 sm:pt-24 lg:grid-cols-[1.35fr_1fr]">
+          <div className="flex flex-col">
+            <p className="text-lg font-semibold tracking-[-0.02em]">{site.name}</p>
+            <h2 className="t-display mt-10">
+              <Rich text={finalCta.title} />
+              <br />
+              <span className="font-[family-name:var(--font-serif)] font-medium">{finalCta.aside}</span>
+            </h2>
+            <p className="mt-6 max-w-md text-lg text-[#9a9a9a]">{finalCta.sub}</p>
+            <div className="mt-auto flex items-end pt-16" aria-hidden="true">
+              {["rabbit", "postman", "longhair", "jelly-yellow", "popcorn"].map((k) => (
+                <CastCircle key={k} k={k} className="-ml-4 h-20 w-20 border-4 border-black first:ml-0 sm:-ml-5 sm:h-36 sm:w-36" />
+              ))}
+            </div>
+          </div>
+          <div className="self-start rounded-[var(--r-lg)] bg-[#1a1a1a] p-7 sm:p-8">
+            <ol className="flex flex-col gap-2.5">
+              {finalCta.steps.map((s, i) => (
+                <li key={s} className="flex items-center gap-4 rounded-[10px] border border-[#2c2c2c] px-4 py-4">
+                  <span className="num grid h-8 w-8 place-items-center rounded-[8px] bg-white text-sm font-semibold text-black">{i + 1}</span>
+                  <span className="font-semibold">{s}</span>
+                </li>
+              ))}
+            </ol>
+            <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "final_cta", label: CTA_LABEL }} className="mt-6 flex h-14 items-center justify-center rounded-[8px] bg-white text-lg font-semibold text-black">
+              {finalCta.cta}
+            </TrackedLink>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

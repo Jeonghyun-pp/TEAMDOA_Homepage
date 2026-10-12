@@ -4,6 +4,8 @@
 export const site = {
   name: "TEAM DOA",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // 검색 노출은 정식 도메인(NEXT_PUBLIC_SITE_URL)을 정한 배포에서만 켠다. 그 전의 미리보기·내부 검토 배포는 noindex.
+  indexable: Boolean(process.env.NEXT_PUBLIC_SITE_URL),
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
   title: "TEAM DOA: 전문직 사무소 인스타툰 제작",
   description:
@@ -15,26 +17,11 @@ export const site = {
   phone: "",
   bizNo: "",
   address: "",
-  makers: [
-    { name: "박정현", role: "기획·제작" },
-    { name: "문형주", role: "영상·음성" },
-  ],
+  makers: [{ name: "박정현" }, { name: "문형주" }, { name: "박상혁" }], // 이름만 싣는다(역할은 쓰지 않음)
 };
-
-export const nav = [
-  { label: "받으실 것", href: "/#offer" },
-  { label: "진행 방식", href: "/#process" },
-  { label: "규정 점검", href: "/#safety" },
-  { label: "그림체", href: "/#styles" },
-];
 
 export const CTA_LABEL = "맞춤 시안 신청";
 
 export const footer = {
-  blurb: "전문직 사무소의 상담 사례를 각색해 인스타툰으로 연재합니다.",
-  menuTitle: "바로가기",
-  contactTitle: "연락처",
-  cta: "문의하기",
   notice: "견본은 가상의 이야기이며, 일부 그림 작업에 AI 도구를 썼습니다.",
-  copyright: "© TEAM DOA",
 };
