@@ -7,7 +7,7 @@ import { PlanPicker } from "@/components/plan-picker";
 import { FieldTopics } from "@/components/field-topics";
 import { ArrowRight, Check } from "@/components/icons";
 import { CTA_LABEL, site } from "@/content/site";
-import { benefits, episode, faq, finalCta, hero, makers, pricing, process, quotes, sample, topics, work } from "@/content/home";
+import { benefits, episode, why, faq, finalCta, hero, makers, pricing, process, quotes, sample, topics, work } from "@/content/home";
 
 // 진행자 얼굴을 동그란 틀에 넣은 작은 아바타
 function HostAvatar({ src = "/img/host/wave.webp", size = "h-12 w-12" }: { src?: string; size?: string }) {
@@ -141,8 +141,14 @@ export default function Home() {
         <div>
           <h1 className="t-display">
             <Rich text={hero.title} />
+            <TrackedLink href="/samples" event="cta_click" eventParams={{ location: "hero_title", label: hero.sampleCta }} className="btn-chip ml-3 inline-flex translate-y-[-0.35em] items-center gap-1 align-middle text-sm font-semibold tracking-normal">
+              {hero.sampleCta}
+              <ArrowRight size={14} />
+            </TrackedLink>
           </h1>
-          <p className="lead-grey mt-7 text-lg">{hero.sub}</p>
+          <p className="lead-grey mt-7 text-lg leading-relaxed">
+            <Rich text={hero.sub} />
+          </p>
         </div>
         <div className="g-cool relative overflow-hidden rounded-[var(--r-lg)] p-7 text-white sm:p-8">
           <Image src={sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} preload className="absolute -right-5 -top-3 w-24 rotate-[9deg] rounded-md shadow-xl sm:w-44" />
@@ -162,6 +168,38 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* 상담 사례로 한다면: 쓰임새 세 가지 + 바로 아래 출처 있는 숫자 */}
+      <Reveal>
+        <section className="shell pb-6 pt-4" id="why">
+          <h2 className="t-h1 text-center">
+            <Rich text={why.title} />
+          </h2>
+          <ol className="mx-auto mt-12 grid max-w-5xl gap-8 md:grid-cols-3">
+            {why.items.map((w, i) => (
+              <li key={w.t} className="border-t border-[var(--line-strong)] pt-5">
+                <span className="num text-sm text-[var(--text-soft)]">0{i + 1}</span>
+                <h3 className="mt-2 text-xl font-semibold">{w.t}</h3>
+                <p className="lead-grey mt-2 leading-relaxed">{w.d}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      </Reveal>
+      {/* 숫자 인용: 위 쓰임새의 근거. 출처가 있는 숫자를 큰 명조로 */}
+      <Reveal>
+        <section className="shell pb-24 pt-14" id="numbers">
+          <ul className="grid gap-x-12 gap-y-16 md:grid-cols-2">
+            {quotes.map((q) => (
+              <li key={q.q} className="text-center">
+                <p className="text-balance font-[family-name:var(--font-serif)] text-2xl leading-snug tracking-[-0.04em] sm:text-[2rem]">“{q.q}”</p>
+                <p className="mt-5 font-semibold">{q.who}</p>
+                <p className="lead-grey text-sm">{q.meta}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </Reveal>
 
       {/* 3단계: 가운데 큰 제목 + 그라데이션 카드 세 장 */}
       <Reveal>
@@ -205,6 +243,7 @@ export default function Home() {
               </li>
             ))}
           </ol>
+          <p className="lead-grey mt-8 text-center">{process.foot}</p>
         </section>
       </Reveal>
 
@@ -257,21 +296,6 @@ export default function Home() {
         </section>
       </Reveal>
 
-      {/* 숫자 인용: 후기 자리에 출처가 있는 숫자를 큰 명조로 */}
-      <Reveal>
-        <section className="shell py-16" id="why">
-          <ul className="grid gap-x-12 gap-y-16 md:grid-cols-2">
-            {quotes.map((q) => (
-              <li key={q.q} className="text-center">
-                <p className="text-balance font-[family-name:var(--font-serif)] text-2xl leading-snug tracking-[-0.04em] sm:text-[2rem]">“{q.q}”</p>
-                <p className="mt-5 font-semibold">{q.who}</p>
-                <p className="lead-grey text-sm">{q.meta}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </Reveal>
-
       {/* 견본 한 화: 메모 → 콘티 → 점검표 → 완성본을 실물 그대로 네 칸에 */}
       <Reveal>
         <section className="shell py-20" id="episode">
@@ -282,7 +306,10 @@ export default function Home() {
           <ol className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <EpisodeStep n={1} step={episode.memo.step} tone="g-warm">
               <div className="memo tilt-l text-[var(--ink)]">
-                <p className="text-xs font-semibold text-[var(--text-soft)]">{episode.memo.field}</p>
+                <p className="flex flex-wrap items-center justify-between gap-1 text-xs font-semibold text-[var(--text-soft)]">
+                  {episode.memo.field}
+                  <span className="rounded-full bg-[var(--accent-tint)] px-2 py-0.5 font-normal text-[var(--accent-strong)]">{episode.memo.purpose}</span>
+                </p>
                 <p className="hand mt-2 text-lg leading-snug">
                   {episode.memo.lines.map((l) => (
                     <span key={l} className="block">
@@ -294,7 +321,8 @@ export default function Home() {
                   <span className="font-semibold">전하고 싶은 것</span> {episode.memo.lesson}
                 </p>
               </div>
-              <p className="mt-4 flex flex-wrap gap-1.5 text-xs">
+              <p className="mt-4 text-xs font-semibold text-white">{episode.memo.deidTitle}</p>
+              <p className="mt-1.5 flex flex-wrap gap-1.5 text-xs">
                 {episode.memo.deid.map((d) => (
                   <span key={d} className="rounded-full bg-white/85 px-2 py-0.5 text-[var(--ink)]">
                     <span className="line-through opacity-50">{d}</span> 바꿈
@@ -323,7 +351,8 @@ export default function Home() {
             </EpisodeStep>
             <EpisodeStep n={3} step={episode.check.step} tone="g-green">
               <div className="rounded-[var(--r)] bg-white p-4 text-[13px] text-[var(--ink)] shadow-xl">
-                <ul>
+                <p className="text-[11px] font-semibold text-[var(--text-soft)]">{episode.check.title}</p>
+                <ul className="mt-1">
                   {episode.check.items.map((c) => (
                     <li key={c} className="flex items-center justify-between gap-2 border-b border-[var(--line)] py-1.5">
                       {c}
@@ -331,8 +360,9 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 rounded-md bg-[#fbf3e6] p-2.5 text-xs leading-relaxed">
-                  <p className="font-semibold">고친 곳 · {episode.check.fix.where}</p>
+                <p className="mt-4 text-[11px] font-semibold text-[var(--text-soft)]">{episode.check.editTitle}</p>
+                <div className="mt-1.5 rounded-md bg-[#fbf3e6] p-2.5 text-xs leading-relaxed">
+                  <p className="font-semibold">{episode.check.fix.where}</p>
                   <p className="mt-0.5">
                     {episode.check.fix.problem} → {episode.check.fix.done}
                   </p>
@@ -355,8 +385,10 @@ export default function Home() {
                   <p className="mt-1 text-[#4a6c9b]">{episode.final.tags.join(" ")}</p>
                 </div>
               </div>
+              <p className="mx-auto mt-3 max-w-[17rem] text-[11px] leading-snug text-white md:max-w-none">{episode.final.clientLabel}</p>
             </EpisodeStep>
           </ol>
+          <p className="lead-grey mx-auto mt-10 max-w-xl text-center">{episode.foot}</p>
         </section>
       </Reveal>
 
@@ -427,7 +459,7 @@ export default function Home() {
             </div>
           </div>
           <div className="rounded-[var(--r-lg)] bg-white p-7 sm:p-10">
-            <FieldTopics fields={topics.fields} checkLabel={topics.checkLabel} />
+            <FieldTopics fields={topics.fields} checkLabel={topics.checkLabel} purposes={topics.purposes} />
           </div>
         </section>
       </Reveal>
@@ -456,8 +488,18 @@ export default function Home() {
                 <p className="text-2xl font-semibold">{pricing.name}</p>
                 <span className="rounded-md border border-[#3b3632] px-2.5 py-1 text-[11px] text-[var(--on-dark-soft)]">{pricing.tag}</span>
               </div>
+              <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-[var(--on-dark-soft)]">
+                <span className="font-semibold text-white">{pricing.derive.from}</span>
+                {pricing.derive.to.map((t, i) => (
+                  <span key={t} className="flex items-center gap-2">
+                    {i === 0 ? <ArrowRight size={14} /> : <span aria-hidden="true">+</span>}
+                    <span className="rounded-full border border-[var(--line-dark)] px-2.5 py-0.5">{t}</span>
+                  </span>
+                ))}
+              </p>
+              <p className="mt-1.5 text-xs text-[var(--on-dark-soft)]">{pricing.derive.note}</p>
               <div className="mt-7">
-                <PlanPicker plans={pricing.plans} defaultPlan={pricing.defaultPlan} common={pricing.common} />
+                <PlanPicker plans={pricing.plans} defaultPlan={pricing.defaultPlan} common={pricing.common} storiesLabel={pricing.storiesLabel} />
               </div>
               <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "pricing", label: pricing.cta }} className="relative mt-8 inline-flex items-center gap-3 rounded-[10px] border border-[#3b3632] bg-[#1c1a19] py-2 pl-2 pr-5 font-semibold">
                 <span className="g-sun grid h-11 w-11 place-items-center rounded-[8px]">
@@ -481,7 +523,32 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <p className="lead-grey mt-6 text-center text-sm">{pricing.foot}</p>
+          <table className="mx-auto mt-10 w-full max-w-3xl text-left text-sm">
+            <tbody>
+              {pricing.fieldPrice.map((r) => (
+                <tr key={r.f} className="border-b border-[var(--line)]">
+                  <th scope="row" className="py-3 pr-4 font-semibold">{r.f}</th>
+                  <td className="lead-grey py-3">{r.p}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="lead-grey mt-4 text-center text-sm">{pricing.foot}</p>
+          <div className="mx-auto mt-10 max-w-3xl">
+            {[pricing.spec, pricing.terms].map((block) => (
+              <details key={block.title} className="faq">
+                <summary>{block.title}</summary>
+                <dl className="pb-5 text-[15px]">
+                  {block.rows.map((r) => (
+                    <div key={r.k} className="grid gap-1 border-b border-[var(--line)] py-3 last:border-0 sm:grid-cols-[7rem_1fr] sm:gap-4">
+                      <dt className="font-semibold">{r.k}</dt>
+                      <dd className="lead-grey leading-relaxed">{r.v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </details>
+            ))}
+          </div>
         </section>
       </Reveal>
 

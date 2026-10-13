@@ -23,7 +23,12 @@ ${benefits.items.map((b) => `- ${b.t}: ${b.d}`).join("\n")}
 ## 가격 (VAT 별도)
 
 ${pricing.plans.map((p) => `- ${p.name}: ${p.price}만원 / ${p.per} (${p.items.join(", ")})`).join("\n")}
+${pricing.fieldPrice.map((r) => `- ${r.f}: ${r.p}`).join("\n")}
 - ${pricing.foot}
+
+## ${pricing.terms.title}
+
+${[...pricing.spec.rows, ...pricing.terms.rows].map((r) => `- ${r.k}: ${r.v}`).join("\n")}
 
 ## 자주 묻는 질문
 
@@ -33,7 +38,7 @@ ${faq.items.map((f) => `- **${f.q}** ${f.a}`).join("\n")}
 
 - [소개](${site.url}/): 진행 방식, 특징, 가격, 자주 묻는 질문
 - [견본](${site.url}/samples): 창작툰 견본과 그림체 여섯 가지
-- [맞춤 시안 신청](${site.url}/consult): 사무소 분야를 알려 주시면 미팅에서 소재 예시를 보여 드립니다
+- [무료 상담 신청](${site.url}/consult): 사무소 분야를 알려 주시면 미팅에서 소재 예시를 보여 드립니다
 `;
   return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
 }
