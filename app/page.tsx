@@ -397,16 +397,16 @@ export default function Home() {
         <section className="shell grid gap-8 py-16 lg:grid-cols-[1.5fr_1fr]" id="sample">
           <div className="overflow-hidden rounded-[var(--r-lg)] bg-white">
             <div className="relative h-72 overflow-hidden sm:h-80">
-              {["A", "H", "D", "M2"].map((k, i) => (
+              {work.pages.map((src, i) => (
                 <Image
-                  key={k}
-                  src={`/img/lineup/${k}.webp`}
+                  key={src}
+                  src={src}
                   alt=""
                   aria-hidden="true"
-                  width={836}
-                  height={470}
-                  className="absolute w-60 rounded-md border border-[var(--line)] bg-white shadow-lg sm:w-72"
-                  style={{ left: `${[2, 30, 8, 40][i]}%`, top: `${[12, 6, 52, 46][i]}%`, transform: `rotate(${[-6, 5, 3, -4][i]}deg)` }}
+                  width={720}
+                  height={900}
+                  className="absolute top-8 w-36 rounded-md border border-[var(--line)] bg-white shadow-xl sm:top-6 sm:w-48"
+                  style={{ left: `calc(${[22, 50, 78][i]}% - 4.5rem)`, transform: `rotate(${[-7, 0, 7][i]}deg) translateY(${[14, 0, 14][i]}px)`, zIndex: [1, 2, 1][i] }}
                 />
               ))}
             </div>

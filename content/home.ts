@@ -146,8 +146,10 @@ export const quotes = [
 
 export const work = {
   title: "견본",
-  sub: "같은 인물을 여러 그림체로 그려 보고 고르실 수 있습니다.",
+  sub: "위 견본 한 화의 원고 장입니다. 그림체는 여섯 가지 가운데 고르실 수 있습니다.",
   cta: "견본 넘겨 보기",
+  // 견본 한 화(sample-divorce 1화)의 가운데 장. 표지·마지막 장은 납품용 라벨과 가상 사무소 이름이 찍혀 있어 쓰지 않는다.
+  pages: ["/img/sample/divorce-04.webp", "/img/sample/divorce-07.webp", "/img/sample/divorce-10.webp"],
   badges: [
     { t: "창작툰", d: "가상 사연" },
     { t: "그림체 6종", d: "연재 내내 같은 그림체" },
