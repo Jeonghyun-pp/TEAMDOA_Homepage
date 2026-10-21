@@ -3,11 +3,10 @@ import { Logo } from "@/components/logo";
 import { Reveal } from "@/components/reveal";
 import { TrackedLink } from "@/components/tracked-link";
 import { Rich } from "@/components/rich";
-import { PlanPicker } from "@/components/plan-picker";
 import { FieldTopics } from "@/components/field-topics";
 import { ArrowRight, Check } from "@/components/icons";
 import { CTA_LABEL, site } from "@/content/site";
-import { benefits, episode, why, faq, finalCta, hero, makers, pricing, process, quotes, sample, topics, work } from "@/content/home";
+import { benefits, conditions, episode, why, faq, finalCta, hero, makers, process, quotes, sample, topics, work } from "@/content/home";
 
 // 진행자 얼굴을 동그란 틀에 넣은 작은 아바타
 function HostAvatar({ src = "/img/host/wave.webp", size = "h-12 w-12" }: { src?: string; size?: string }) {
@@ -56,7 +55,7 @@ function CardRow({ href, title, sub }: { href: string; title: string; sub: strin
 const COVERS = ["/img/sample/cover-pastel.webp", "/img/sample/cover-pen.webp", "/img/cast/woman.webp"];
 const FEED = ["rabbit", "longhair", "postman", "fox", "jelly-yellow", "woman"];
 
-// 장점 카드 안의 작은 물건: 연재 표지 묶음, 점검표, 메모, 가격, 인스타 프로필
+// 장점 카드 안의 작은 물건: 연재 표지 묶음, 점검표, 메모, 정액, 인스타 프로필
 function BenefitVisual({ kind }: { kind: string }) {
   if (kind === "covers")
     return (
@@ -93,8 +92,8 @@ function BenefitVisual({ kind }: { kind: string }) {
   if (kind === "price")
     return (
       <p className="num text-center text-white drop-shadow">
-        <span className="block text-5xl font-semibold tracking-[-0.05em]">150</span>
-        <span className="text-sm font-semibold">만원 / 월</span>
+        <span className="block text-5xl font-semibold tracking-[-0.05em]">정액</span>
+        <span className="text-sm font-semibold">건수와 상관없이</span>
       </p>
     );
   return (
@@ -160,7 +159,7 @@ export default function Home() {
             <Rich text={hero.card.title} />
           </p>
           <p className="relative mt-3 opacity-90">{hero.card.sub}</p>
-          <TrackedLink href="/#pricing" event="cta_click" eventParams={{ location: "hero_card", label: hero.card.cta }} className="relative mt-7 flex h-14 items-center justify-center rounded-[8px] bg-white text-lg font-semibold text-[var(--ink)]">
+          <TrackedLink href="/#start" event="cta_click" eventParams={{ location: "hero_card", label: hero.card.cta }} className="relative mt-7 flex h-14 items-center justify-center rounded-[8px] bg-white text-lg font-semibold text-[var(--ink)]">
             {hero.card.cta}
           </TrackedLink>
           <div className="relative mt-6">
@@ -464,54 +463,40 @@ export default function Home() {
         </section>
       </Reveal>
 
-      {/* 가격: 왼쪽 흰 카드 + 오른쪽 검정 카드, 아래 점선 카드 두 장 */}
+      {/* 시작하는 법: 가격 대신 "한 편 보고 정한다". 왼쪽 시안 카드 + 오른쪽 견본 장, 원칙 카드, 가격 안내 한 줄 + 상담 버튼, 접는 표 */}
       <Reveal>
-        <section className="shell scroll-mt-10 py-24" id="pricing">
-          <span className="eyebrow text-center">{pricing.eyebrow}</span>
+        <section className="shell scroll-mt-10 py-24" id="start">
+          <span className="eyebrow text-center">{conditions.eyebrow}</span>
           <h2 className="t-h1 mt-4 text-center">
-            <Rich text={pricing.title} />
+            <Rich text={conditions.title} />
           </h2>
-          <div className="mt-16 grid gap-8 lg:grid-cols-[1fr_1.45fr]">
-            <div className="relative flex min-h-[26rem] flex-col justify-end rounded-[var(--r-lg)] bg-white p-8 sm:p-10">
-              <Image src={sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} className="absolute -left-4 -top-10 w-48 -rotate-[14deg] rounded-lg shadow-2xl sm:w-56" />
-              <Image src={sample.pages[1]?.src ?? sample.pages[0].src} alt="" aria-hidden="true" width={864} height={1080} className="absolute left-36 -top-4 w-40 rotate-[8deg] rounded-lg shadow-2xl sm:left-44 sm:w-48" />
-              <span className="relative inline-flex w-fit items-center gap-2 rounded-full bg-black px-3.5 py-1.5 text-sm font-semibold text-white">
+          <p className="lead-grey mx-auto mt-5 max-w-2xl text-center">{conditions.sub}</p>
+          <div className="mt-14 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
+            <div className="rounded-[var(--r-lg)] bg-white p-8 sm:p-10">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-black px-3.5 py-1.5 text-sm font-semibold text-white">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#f2c14e]" aria-hidden="true" />
-                {pricing.left.pill}
+                {conditions.trialPill}
               </span>
-              <p className="relative mt-5 text-4xl font-semibold leading-[1.1] tracking-[-0.045em] sm:text-5xl">
-                <Rich text={pricing.left.title} />
-              </p>
-            </div>
-            <div className="relative overflow-hidden rounded-[var(--r-lg)] bg-black p-8 text-white shadow-2xl sm:p-10">
-              <div className="flex items-center justify-between gap-3 border-b border-dashed border-[#3b3632] pb-7">
-                <p className="text-2xl font-semibold">{pricing.name}</p>
-                <span className="rounded-md border border-[#3b3632] px-2.5 py-1 text-[11px] text-[var(--on-dark-soft)]">{pricing.tag}</span>
-              </div>
-              <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-[var(--on-dark-soft)]">
-                <span className="font-semibold text-white">{pricing.derive.from}</span>
-                {pricing.derive.to.map((t, i) => (
-                  <span key={t} className="flex items-center gap-2">
-                    {i === 0 ? <ArrowRight size={14} /> : <span aria-hidden="true">+</span>}
-                    <span className="rounded-full border border-[var(--line-dark)] px-2.5 py-0.5">{t}</span>
-                  </span>
+              <p className="mt-6 text-2xl font-semibold tracking-[-0.03em]">{conditions.trialTitle}</p>
+              <ul className="mt-4">
+                {conditions.trial.map((t) => (
+                  <li key={t} className="flex items-center gap-3 border-b border-[var(--line)] py-3 last:border-0">
+                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border-[1.5px] border-[var(--ink)]">
+                      <Check size={12} />
+                    </span>
+                    {t}
+                  </li>
                 ))}
-              </p>
-              <p className="mt-1.5 text-xs text-[var(--on-dark-soft)]">{pricing.derive.note}</p>
-              <div className="mt-7">
-                <PlanPicker plans={pricing.plans} defaultPlan={pricing.defaultPlan} common={pricing.common} storiesLabel={pricing.storiesLabel} />
-              </div>
-              <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "pricing", label: pricing.cta }} className="relative mt-8 inline-flex items-center gap-3 rounded-[10px] border border-[#3b3632] bg-[#1c1a19] py-2 pl-2 pr-5 font-semibold">
-                <span className="g-sun grid h-11 w-11 place-items-center rounded-[8px]">
-                  <ArrowRight size={18} />
-                </span>
-                {pricing.cta}
-              </TrackedLink>
-              <CastCircle k="raccoon" className="absolute -bottom-8 -right-8 h-36 w-36 border-4 border-[#1c1a19]" />
+              </ul>
+              <p className="lead-grey mt-4 text-sm">{conditions.trialNot}</p>
+            </div>
+            <div className="g-warm flex min-h-[22rem] items-center justify-center overflow-hidden rounded-[var(--r-lg)] px-6 py-10" aria-hidden="true">
+              <Image src={sample.pages[0].src} alt="" width={864} height={1080} className="w-[44%] max-w-[15rem] -rotate-[8deg] rounded-lg shadow-2xl" />
+              <Image src={sample.pages[1]?.src ?? sample.pages[0].src} alt="" width={864} height={1080} className="-ml-[6%] mt-10 w-[44%] max-w-[15rem] rotate-[6deg] rounded-lg shadow-2xl" />
             </div>
           </div>
           <ul className="mt-8 grid gap-8 md:grid-cols-2">
-            {pricing.notes.map((n) => (
+            {conditions.notes.map((n) => (
               <li key={n.t} className="dash p-8">
                 <p className="flex items-center gap-2.5 text-xl font-semibold">
                   <span className="grid h-6 w-6 place-items-center rounded-full border-[1.5px] border-[var(--ink)]">
@@ -523,19 +508,17 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <table className="mx-auto mt-10 w-full max-w-3xl text-left text-sm">
-            <tbody>
-              {pricing.fieldPrice.map((r) => (
-                <tr key={r.f} className="border-b border-[var(--line)]">
-                  <th scope="row" className="py-3 pr-4 font-semibold">{r.f}</th>
-                  <td className="lead-grey py-3">{r.p}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="lead-grey mt-4 text-center text-sm">{pricing.foot}</p>
+          <div className="mt-12 flex flex-col items-center gap-4 text-center">
+            <p className="lead-grey max-w-xl text-sm">{conditions.priceNote}</p>
+            <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "start", label: conditions.cta }} className="inline-flex items-center gap-3 rounded-[10px] bg-black py-2 pl-2 pr-5 font-semibold text-white">
+              <span className="g-sun grid h-11 w-11 place-items-center rounded-[8px]">
+                <ArrowRight size={18} />
+              </span>
+              {conditions.cta}
+            </TrackedLink>
+          </div>
           <div className="mx-auto mt-10 max-w-3xl">
-            {[pricing.spec, pricing.terms].map((block) => (
+            {[conditions.spec, conditions.terms].map((block) => (
               <details key={block.title} className="faq">
                 <summary>{block.title}</summary>
                 <dl className="pb-5 text-[15px]">
