@@ -20,7 +20,7 @@ export const site = {
   makers: [{ name: "박정현" }, { name: "문형주" }, { name: "박상혁" }], // 이름만 싣는다(역할은 쓰지 않음)
 };
 
-// 상담은 무료, 시안은 유료(40만원). 버튼은 무료 단계 이름으로 쓴다.
+// 상담은 무료, 시안은 유료(가격은 미팅에서 안내). 버튼은 무료 단계 이름으로 쓴다.
 export const CTA_LABEL = "무료 상담 신청";
 
 export const footer = {

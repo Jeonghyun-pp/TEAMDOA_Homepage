@@ -1,5 +1,5 @@
 import { site } from "@/content/site";
-import { benefits, faq, pricing, process } from "@/content/home";
+import { benefits, conditions, faq, process } from "@/content/home";
 
 // AI 검색·크롤러용 요약. 도메인이 바뀌어도 따라가도록 site.url로 만든다.
 export const dynamic = "force-static";
@@ -20,15 +20,13 @@ ${process.steps.map((st, i) => `${i + 1}. ${st.t}: ${st.d}`).join("\n")}
 
 ${benefits.items.map((b) => `- ${b.t}: ${b.d}`).join("\n")}
 
-## 가격 (VAT 별도)
+## 가격
 
-${pricing.plans.map((p) => `- ${p.name}: ${p.price}만원 / ${p.per} (${p.items.join(", ")})`).join("\n")}
-${pricing.fieldPrice.map((r) => `- ${r.f}: ${r.p}`).join("\n")}
-- ${pricing.foot}
+${conditions.sub} ${conditions.priceNote}
 
-## ${pricing.terms.title}
+## ${conditions.terms.title}
 
-${[...pricing.spec.rows, ...pricing.terms.rows].map((r) => `- ${r.k}: ${r.v}`).join("\n")}
+${[...conditions.spec.rows, ...conditions.terms.rows].map((r) => `- ${r.k}: ${r.v}`).join("\n")}
 
 ## 자주 묻는 질문
 
@@ -36,7 +34,7 @@ ${faq.items.map((f) => `- **${f.q}** ${f.a}`).join("\n")}
 
 ## 주요 페이지
 
-- [소개](${site.url}/): 진행 방식, 특징, 가격, 자주 묻는 질문
+- [소개](${site.url}/): 진행 방식, 특징, 시작하는 법, 자주 묻는 질문
 - [견본](${site.url}/samples): 창작툰 견본과 그림체 여섯 가지
 - [무료 상담 신청](${site.url}/consult): 사무소 분야를 알려 주시면 미팅에서 소재 예시를 보여 드립니다
 `;
