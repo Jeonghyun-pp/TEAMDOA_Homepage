@@ -18,8 +18,8 @@ export function Header() {
           <TrackedLink href="/consult" event="cta_click" eventParams={{ location: "header", label: "미팅 신청" }} className="btn-chip hidden sm:inline-flex">
             미팅 신청
           </TrackedLink>
-          <TrackedLink href="/#pricing" event="cta_click" eventParams={{ location: "header", label: "가격 보기" }} className="btn-chip btn-chip-dark">
-            가격 보기
+          <TrackedLink href="/#services" event="cta_click" eventParams={{ location: "header", label: "서비스 보기" }} className="btn-chip btn-chip-dark">
+            서비스 보기
           </TrackedLink>
         </div>
       </div>

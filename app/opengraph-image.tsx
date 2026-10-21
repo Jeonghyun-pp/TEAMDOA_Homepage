@@ -18,9 +18,9 @@ async function font(weight: number, text: string) {
 }
 
 export default async function OG() {
-  const kicker = "인스타툰 마케팅 대행";
-  const title = "전문직 사무소의 인스타툰을\n대신 만들고 운영합니다";
-  const foot = "사연툰 · 정보툰 · 릴스 · 편마다 광고 규정 점검표";
+  const kicker = "지금은 고객 설명부터 합니다";
+  const title = "전문직 현장의\n병목을 풉니다";
+  const foot = "인스타툰 연재 · 사연툰 · 릴스 · 광고 규정 점검";
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", background: PAPER, padding: "72px 80px", borderBottom: `16px solid ${TERRA}` }}>

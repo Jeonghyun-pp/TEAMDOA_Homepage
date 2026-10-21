@@ -7,10 +7,10 @@ export const site = {
   // 검색 노출은 정식 도메인(NEXT_PUBLIC_SITE_URL)을 정한 배포에서만 켠다. 그 전의 미리보기·내부 검토 배포는 noindex.
   indexable: Boolean(process.env.NEXT_PUBLIC_SITE_URL),
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
-  title: "TEAM DOA: 전문직 사무소 인스타툰 제작",
+  title: "TEAM DOA: 전문직 현장의 병목을 풉니다",
   description:
-    "변호사·노무사·동물병원·요양원처럼 설명이 긴 일을 하는 곳의 상담 사례를 각색해 인스타툰으로 연재합니다. 사연툰·정보툰·릴스에 편마다 광고 규정 점검표를 붙여 드립니다.",
-  ogDescription: "전문직 사무소의 상담 사례를 각색해 인스타툰으로 연재합니다. 편마다 광고 규정 점검표를 함께 드립니다.",
+    "변호사·노무사·동물병원·요양원처럼 고객 설명이 긴 현장의 병목을 풉니다. 지금은 상담 사례를 각색한 인스타툰 연재를 맡고, 광고 규정 점검까지 함께 합니다.",
+  ogDescription: "전문직 현장의 병목을 풉니다. 지금은 상담 사례를 각색한 인스타툰 연재를 맡고, 광고 규정 점검까지 함께 합니다.",
   keywords: ["인스타툰 제작", "인스타툰 대행", "법률 마케팅", "변호사 인스타툰", "노무사 마케팅", "동물병원 인스타그램", "사연툰", "TEAM DOA"],
   email: "doa2026admin@gmail.com",
   // 아래 값이 비어 있으면 화면에 나오지 않는다. 정해지면 채운다.
@@ -20,7 +20,7 @@ export const site = {
   makers: [{ name: "박정현" }, { name: "문형주" }, { name: "박상혁" }], // 이름만 싣는다(역할은 쓰지 않음)
 };
 
-// 상담은 무료, 시안은 유료(40만원). 버튼은 무료 단계 이름으로 쓴다.
+// 상담은 무료, 시안은 유료(가격은 미팅에서 안내). 버튼은 무료 단계 이름으로 쓴다.
 export const CTA_LABEL = "무료 상담 신청";
 
 export const footer = {
